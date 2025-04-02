@@ -8,11 +8,11 @@ base = "light"
 primaryColor = "#027373"
 
 # 메인 콘텐츠 영역의 배경색입니다.
-backgroundColor = "#EEEEEE"
+backgroundColor = "#FFFFFF"
 
 # 사이드바와 대부분의 대화형 위젯에 사용되는 배경색입니다.
 # secondaryBackgroundColor = "#A9D9D0"
-secondaryBackgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#EEEEEE"
 
 # 대부분의 텍스트에 사용되는 색상입니다.
 textColor = "#0D0D0D"
