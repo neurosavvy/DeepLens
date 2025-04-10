@@ -16,7 +16,7 @@ from langchain.chains import create_sql_query_chain
 from langchain.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
 
-# from langchain_teddynote import logging
+from langchain_teddynote import logging
 from langchain_community.utilities import SQLDatabase
 from langchain.document_loaders import DataFrameLoader
 from langchain_core.prompts import load_prompt
