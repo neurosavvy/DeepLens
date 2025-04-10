@@ -94,13 +94,13 @@ def stream_handler(streamlit_container, agent_executor, inputs, config):
                 )
                 if current_tool_message:
                     current_tool_message["tool_result"] = chunk_msg.content
-                    with st.status(f'✅ {current_tool_message["tool_name"]}'):
-                        if current_tool_message["tool_name"] == "web_search":
-                            st.markdown(
-                                format_search_result(
-                                    current_tool_message["tool_result"]
-                                )
-                            )
+                    # with st.status(f'✅ {current_tool_message["tool_name"]}'):
+                    #     if current_tool_message["tool_name"] == "web_search":
+                    #         st.markdown(
+                    #             format_search_result(
+                    #                 current_tool_message["tool_result"]
+                    #             )
+                    #         )
 
             if metadata["langgraph_node"] == "agent":
                 if chunk_msg.content:
