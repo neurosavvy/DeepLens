@@ -8,15 +8,20 @@ from dotenv import load_dotenv
 from modules.handler import stream_handler, format_search_result
 from modules.tools import WebSearchTool
 
-# API KEY 정보로드
-load_dotenv()
+import deepl
 
-# 프로젝트 이름
-logging.langsmith("Perplexity")
 
-st.title("Perplexity 💬")
+@dataclass
+class ChatMessageWithType:
+    chat_message: ChatMessage
+    msg_type: str
+    tool_name: str
+
+
+st.title("DeepLens!")
+st.title("넷스루 행동데이터 AI분석 💬")
 st.markdown(
-    "LLM에 **웹검색 기능** 을 추가한 [Perplexity](https://www.perplexity.ai/) 클론 입니다. _멀티턴_ 대화를 지원합니다."
+    "**고객행동데이터**를 사용자의 자연어 요청에 따라 LLM으로 자동분석하는 솔루션"
 )
 
 # 대화기록을 저장하기 위한 용도로 생성
@@ -31,12 +36,14 @@ if "react_agent" not in st.session_state:
 if "include_domains" not in st.session_state:
     st.session_state["include_domains"] = []
 
+
 # 사이드바 생성
 with st.sidebar:
+
     # 초기화 버튼 생성
     clear_btn = st.button("대화 초기화")
 
-    st.markdown("made by [@teddynote](https://youtube.com/c/teddynote)")
+    st.markdown("made by inwoo")
 
     # 모델 선택 메뉴
     selected_model = st.selectbox("LLM 선택", ["gpt-4o", "gpt-4o-mini"], index=0)
@@ -67,13 +74,6 @@ with st.sidebar:
 
     # 설정 버튼
     apply_btn = st.button("설정 완료", type="primary")
-
-
-@dataclass
-class ChatMessageWithType:
-    chat_message: ChatMessage
-    msg_type: str
-    tool_name: str
 
 
 # 이전 대화를 출력
@@ -110,10 +110,65 @@ def add_message(role, message, msg_type="text", tool_name=""):
         )
 
 
+def request_to_llm(user_input):
+    """ClickHouse 연결, 정보 추출, FAISS 인덱스 생성, 쿼리 생성 및 실행을 수행합니다."""
+    db_driver = deepl.connect_to_clickhouse()
+    if not db_driver:
+        return
+
+    df_tablemeta = deepl.get_tablemeta(db_driver, deepl.CLICKHOUSE_DATABASE)
+
+    # df_templatequery = deepl.get_templatequery()
+
+    # df_query_exec_list = deepl.execute_query()
+
+    # df_prompt = deepl.set_prompt(df_query_exec_list)
+
+    # retriever = deepl.get_retriever(df_tablemeta, df_templatequery)
+
+    # 자연어 쿼리 예시
+    # user_request = "1,2,3번 페이지를 방문한 고객의 명단을 최다방문순 TOP 100개 추출해줘"  # 예시 쿼리. 실제 쿼리는 데이터에 맞게 수정해야 합니다.
+    # user_request = "1번 페이지를 방문한 고객의 추천상품을 선정해줘"  # 예시 쿼리. 실제 쿼리는 데이터에 맞게 수정해야 합니다.
+    # user_request = "moniClckStream테이블에서 memberid가 10000001인 고객을 분석해줘"  # 예시 쿼리. 실제 쿼리는 데이터에 맞게 수정해야 합니다.
+
+    # ans, request_target, request_subject = split_question(user_request)
+
+    # request_target, request_subject = deepl.split_sentence_AI(user_input)
+
+    # # print(ans)
+    # print(request_target)
+    # print(request_subject)
+
+    # if True:
+    #     clickhouse_query = deepl.generate_query_target(user_input, retriever)
+    # # print(f"생성된 ClickHouse 쿼리: {clickhouse_query}")
+
+    # target_list = db_driver.execute(clickhouse_query)
+    # result = deepl.analysis_target(target_list)
+    # # df = pd.DataFrame(result)
+    # print(result.content)
+
+    # try:
+    #     target_list = db_driver.execute(clickhouse_query)
+    #     result = deepl.analysis_target(target_list)
+    #     # df = pd.DataFrame(result)
+    #     print(result)
+    # except Exception as e:
+    #     print(f"쿼리 실행 오류: {e}")
+
+    # else:
+    #     return
+    return df_tablemeta  # , df_templatequery, df_query_exec_list, df_prompt
+
+
+# 환경변수 초기화 호출
+deepl.init_env()
+
 # 초기화 버튼이 눌리면...
 if clear_btn:
     st.session_state["messages"] = []
     st.session_state["thread_id"] = random_uuid()
+
 # 이전 대화 기록 출력
 print_messages()
 
@@ -122,6 +177,8 @@ user_input = st.chat_input("궁금한 내용을 물어보세요!")
 
 # 경고 메시지를 띄우기 위한 빈 영역
 warning_msg = st.empty()
+
+apply_btn = True
 
 # 설정 버튼이 눌리면...
 if apply_btn:
@@ -145,6 +202,8 @@ if user_input:
         # 사용자의 입력
         st.chat_message("user").write(user_input)
 
+        prompt = deepl.set_request_prompt(user_input)
+
         with st.chat_message("assistant"):
             # 빈 공간(컨테이너)을 만들어서, 여기에 토큰을 스트리밍 출력한다.
             container = st.empty()
@@ -155,7 +214,10 @@ if user_input:
                 agent,
                 {
                     "messages": [
-                        ("human", user_input),
+                        (
+                            "human",
+                            prompt,
+                        ),
                     ]
                 },
                 config,
