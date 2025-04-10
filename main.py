@@ -8,6 +8,7 @@ import uuid
 from modules.agent import create_agent_executor
 from dotenv import load_dotenv
 from modules.handler import stream_handler, format_search_result
+from modules.tools import WebSearchTool
 
 import deepl
 
@@ -182,16 +183,16 @@ warning_msg = st.empty()
 apply_btn = True
 
 # 설정 버튼이 눌리면...
-if apply_btn:
-    tool = WebSearchTool().create()
-    tool.max_results = search_result_count
-    tool.include_domains = st.session_state["include_domains"]
-    tool.topic = search_topic
-    st.session_state["react_agent"] = create_agent_executor(
-        model_name=selected_model,
-        tools=[tool],
-    )
-    st.session_state["thread_id"] = uuid.uuid4()
+# if apply_btn:
+#     tool = WebSearchTool().create()
+#     tool.max_results = search_result_count
+#     tool.include_domains = st.session_state["include_domains"]
+#     tool.topic = search_topic
+#     st.session_state["react_agent"] = create_agent_executor(
+#         model_name=selected_model,
+#         tools=[tool],
+#     )
+#     st.session_state["thread_id"] = uuid.uuid4()
 
 # 만약에 사용자 입력이 들어오면...
 if user_input:
