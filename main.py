@@ -2,7 +2,9 @@ from attr import dataclass
 import streamlit as st
 from langchain_core.messages.chat import ChatMessage
 from langchain_teddynote import logging
-from langchain_teddynote.messages import random_uuid
+
+# from langchain_teddynote.messages import random_uuid
+import uuid
 from modules.agent import create_agent_executor
 from dotenv import load_dotenv
 from modules.handler import stream_handler, format_search_result
@@ -167,7 +169,7 @@ deepl.init_env()
 # 초기화 버튼이 눌리면...
 if clear_btn:
     st.session_state["messages"] = []
-    st.session_state["thread_id"] = random_uuid()
+    st.session_state["thread_id"] = uuid.uuid4()
 
 # 이전 대화 기록 출력
 print_messages()
@@ -190,7 +192,7 @@ if apply_btn:
         model_name=selected_model,
         tools=[tool],
     )
-    st.session_state["thread_id"] = random_uuid()
+    st.session_state["thread_id"] = uuid.uuid4()
 
 # 만약에 사용자 입력이 들어오면...
 if user_input:
