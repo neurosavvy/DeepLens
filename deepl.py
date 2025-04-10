@@ -15,7 +15,8 @@ from langchain.chains import RetrievalQA
 from langchain.chains import create_sql_query_chain
 from langchain.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
-from langchain_teddynote import logging
+
+# from langchain_teddynote import logging
 from langchain_community.utilities import SQLDatabase
 from langchain.document_loaders import DataFrameLoader
 from langchain_core.prompts import load_prompt
@@ -41,8 +42,10 @@ def init_env():
 
     # LangSmith 추적을 설정합니다. https://smith.langchain.com
     # 프로젝트 이름을 입력합니다.
-    logging.langsmith("DeepLens-01")
-    # openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+
+#    logging.langsmith("DeepLens-01")
+# openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 
 def connect_to_clickhouse():
