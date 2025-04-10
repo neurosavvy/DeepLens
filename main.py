@@ -8,7 +8,6 @@ import uuid
 from modules.agent import create_agent_executor
 from dotenv import load_dotenv
 from modules.handler import stream_handler, format_search_result
-from modules.tools import WebSearchTool
 
 import deepl
 
