@@ -8,7 +8,9 @@ import openai
 
 # API 키를 환경변수로 관리하기 위한 설정 파일
 from langchain_openai import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
+
+# from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain.llms import OpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chains import RetrievalQA
