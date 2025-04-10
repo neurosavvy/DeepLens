@@ -3,7 +3,7 @@ import streamlit as st
 from langchain_core.messages.chat import ChatMessage
 from langchain_teddynote import logging
 
-from langchain_teddynote.messages import random_uuid
+# from langchain_teddynote.messages import random_uuid
 import uuid
 from modules.agent import create_agent_executor
 from modules.handler import stream_handler, format_search_result
